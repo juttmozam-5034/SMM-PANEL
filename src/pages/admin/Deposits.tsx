@@ -7,7 +7,7 @@ type Dep = { id: string; method: string; amount: number; trx_id: string; status:
 const ST: Record<string, string> = { pending: "pending", approved: "completed", rejected: "cancelled" };
 export default function Deposits() {
   const [rows, setRows] = useState<Dep[]>([]); const [fs, setFs] = useState("pending"); const [q, setQ] = useState(""); const [err, setErr] = useState(""); const [busy, setBusy] = useState("");
-  const load = () => supabase.from("deposit_requests").select("*, profiles(username,email)").order("created_at", { ascending: false }).limit(300).then(({ data }) => setRows((data ?? []) as unknown as Dep[]));
+  const load = () => supabase.from("deposit_requests").select("*, profiles!user_id(username,email)").order("created_at", { ascending: false }).limit(300).then(({ data, error }) => { if (error) setErr(error.message); setRows((data ?? []) as unknown as Dep[]); });
   useEffect(() => { load(); }, []);
   async function act(d: Dep, kind: "approve" | "reject") {
     setErr("");
