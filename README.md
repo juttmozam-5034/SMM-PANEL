@@ -50,6 +50,12 @@ Public registration always creates a `customer`; role changes by API users are b
 3. Environment variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`.
 4. Deploy, then add the Vercel URL to Supabase Site URL / Redirect URLs. `vercel.json` rewrites all paths to `index.html`.
 
+## Website assistant (free, no API key)
+* The chat widget ("Ask us") is a rule-based assistant that runs in the browser: **no AI service, no API key, no per-message cost**.
+* It answers from live data only: active services (price, min/max, delivery), plus the FAQ, refund policy, delivery notes and extra info you write in Admin -> **Bot Knowledge**. It also calculates totals ("250 youtube views"), understands English and Roman Urdu keywords, and otherwise tells the customer to open a support ticket.
+* Run `supabase/0008_bot.sql` once. Chats are not stored and the bot cannot see accounts, wallets or orders.
+* It matches keywords, so it is not as flexible as an AI model. Add FAQ entries for questions your customers ask often.
+
 ## Tests
 * **Money rules in the database** (the important ones): paste `supabase/tests/financial_rules_test.sql` into the SQL Editor and Run. It ends with an intentional error whose message is the report; every line should say PASS and the last line `RESULT: ALL TESTS PASSED`. All test data is rolled back. It covers: signup role, customer cannot reach admin functions or edit role/balance/ledger/services, admin can add/edit services, valid order, insufficient balance, invalid quantity, price manipulation, duplicate submit, pending deposit does not credit, approval credits once, duplicate TID, rejection, admin credit/debit ledger, blocked users, refunds only once, data isolation, ledger immutability, balance = ledger sum.
 * **Unit tests**: `npm test` (price formula and PKR formatting).
