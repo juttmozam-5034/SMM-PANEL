@@ -5,6 +5,7 @@ import { useAuth } from "../auth/AuthProvider";
 import { formatPKR, orderTotal } from "../lib/money";
 import { friendlyError } from "../lib/errors";
 import PlatformIcon from "../components/PlatformIcon";
+import { linkInfo } from "../lib/linkType";
 import type { Category, Platform, Service } from "../lib/types";
 
 export default function NewOrder() {
@@ -29,6 +30,7 @@ export default function NewOrder() {
   const categories = useMemo(() => cats.filter((c) => services.some((s) => s.platform_id === platformId && s.category_id === c.id)), [cats, services, platformId]);
   const options = useMemo(() => services.filter((s) => s.platform_id === platformId && s.category_id === categoryId), [services, platformId, categoryId]);
   const svc = services.find((s) => s.id === serviceId);
+  const li = svc ? linkInfo(cats.find((c) => c.id === categoryId)?.name ?? "", svc.name) : null;
   const n = parseInt(qty, 10);
   const qtyOk = !!svc && Number.isInteger(n) && n >= svc.min_qty && n <= svc.max_qty;
   const total = svc && qtyOk ? orderTotal(n, Number(svc.price_per_1000)) : 0;
@@ -64,8 +66,9 @@ export default function NewOrder() {
           {svc.instructions && <p><b>Instructions:</b> {svc.instructions}</p>}
         </div>}
         {svc && <>
-          <label className="block text-sm">Target link (public video, post or profile)
-            <input className="input mt-1" placeholder="https://…" value={url} onChange={(e) => { setUrl(e.target.value); setConfirm(false); }} /></label>
+          <label className="block text-sm">{li?.label ?? "Paste your link"}
+            <input className="input mt-1" placeholder={li?.placeholder ?? "https://…"} value={url} onChange={(e) => { setUrl(e.target.value); setConfirm(false); }} />
+            <span className="mt-1 block text-xs text-slate-500">{li?.hint}</span></label>
           <label className="block text-sm">Quantity
             <input className="input mt-1" type="number" min={svc.min_qty} max={svc.max_qty} step={1} value={qty} onChange={(e) => { setQty(e.target.value); setConfirm(false); }} /></label>
           {qty !== "" && !qtyOk && <p className="text-sm text-red-600">Quantity must be between {svc.min_qty} and {svc.max_qty}.</p>}
