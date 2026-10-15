@@ -45,7 +45,12 @@ export default function ChatWidget() {
         </div>)}
       {wa && <a href={waHref} target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" title="Chat on WhatsApp"
         className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] shadow-lg hover:brightness-95"><svg viewBox="0 0 24 24" className="h-7 w-7 fill-white" aria-hidden="true"><path d={WA_PATH} /></svg></a>}
-      {botOn && <button onClick={() => setOpen(!open)} className="flex h-12 items-center rounded-full bg-brand-600 px-5 text-sm font-medium text-white shadow-lg hover:bg-brand-700">{open ? "Close" : "Ask us"}</button>}
+      {botOn && <button onClick={() => setOpen(!open)} aria-label={open ? "Close assistant" : "Open support assistant"} title="Chat with our assistant"
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg hover:bg-brand-700">
+        {open ? <span className="text-lg leading-none">✕</span> : <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="4" y="8" width="16" height="12" rx="3" /><path d="M12 8V5" /><circle cx="12" cy="3.8" r="1.2" fill="white" stroke="none" />
+          <circle cx="9" cy="13" r="1.3" fill="white" stroke="none" /><circle cx="15" cy="13" r="1.3" fill="white" stroke="none" /><path d="M9.5 17h5" /><path d="M2 13v3M22 13v3" /></svg>}
+      </button>}
     </div>
   );
 }
