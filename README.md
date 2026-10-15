@@ -56,6 +56,9 @@ Public registration always creates a `customer`; role changes by API users are b
 * Run `supabase/0008_bot.sql` once. Chats are not stored and the bot cannot see accounts, wallets or orders.
 * It matches keywords, so it is not as flexible as an AI model. Add FAQ entries for questions your customers ask often.
 
+## Admin alerts (free, Telegram)
+Run `supabase/0009_alerts.sql`, then Admin -> **Admin Alerts**. Database triggers send a Telegram message (through Supabase's built-in pg_net) for new orders, deposit requests and customer support messages. The bot token is stored in a table API users cannot read. An alert failure never blocks an order or deposit.
+
 ## Tests
 * **Money rules in the database** (the important ones): paste `supabase/tests/financial_rules_test.sql` into the SQL Editor and Run. It ends with an intentional error whose message is the report; every line should say PASS and the last line `RESULT: ALL TESTS PASSED`. All test data is rolled back. It covers: signup role, customer cannot reach admin functions or edit role/balance/ledger/services, admin can add/edit services, valid order, insufficient balance, invalid quantity, price manipulation, duplicate submit, pending deposit does not credit, approval credits once, duplicate TID, rejection, admin credit/debit ledger, blocked users, refunds only once, data isolation, ledger immutability, balance = ledger sum.
 * **Unit tests**: `npm test` (price formula and PKR formatting).
