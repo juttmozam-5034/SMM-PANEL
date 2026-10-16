@@ -62,6 +62,12 @@ Run `supabase/0009_alerts.sql`, then Admin -> **Admin Alerts**. Database trigger
 ## Logo
 Run `supabase/0010_branding.sql` (creates a public `branding` storage bucket that only admins can write to). Then Admin -> **Website Settings** -> **Upload logo** -> **Save settings**. The logo shows in the sidebar, landing page, login pages and the browser tab icon.
 
+## Special services (fixed price and lump-sum requests)
+Run `supabase/0012_fixed_and_lump.sql` (after 0011). In Manage Services, **Service type** can be: *Order* (link + quantity), *Fixed price* (no link, wallet charged, e.g. Buy Your Own SMM Panel) or *Lump sum request* (description only, no charge, order starts Pending, e.g. Buy Your Own Website). Both show up in the normal Orders lists.
+
+## Request services (older note)
+Run `supabase/0011_requests.sql`. In Manage Services, choose service type **Request**: the customer sees a description box and a **Send** button (no link, quantity or wallet charge), gets a toast with a WhatsApp button, and you get a Telegram alert and a row in Admin -> **Service Requests**.
+
 ## Tests
 * **Money rules in the database** (the important ones): paste `supabase/tests/financial_rules_test.sql` into the SQL Editor and Run. It ends with an intentional error whose message is the report; every line should say PASS and the last line `RESULT: ALL TESTS PASSED`. All test data is rolled back. It covers: signup role, customer cannot reach admin functions or edit role/balance/ledger/services, admin can add/edit services, valid order, insufficient balance, invalid quantity, price manipulation, duplicate submit, pending deposit does not credit, approval credits once, duplicate TID, rejection, admin credit/debit ledger, blocked users, refunds only once, data isolation, ledger immutability, balance = ledger sum.
 * **Unit tests**: `npm test` (price formula and PKR formatting).
